@@ -1,0 +1,144 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { getAQICategory, getConfidenceLabel } from '@/lib/aqi-utils';
+import { getMonthName } from '@/lib/aqi-data';
+import type { PredictionResult } from '@/lib/aqi-predictor';
+import { Activity, AlertTriangle, TrendingDown, TrendingUp, Minus, Shield } from 'lucide-react';
+
+interface AQIPredictionResultProps {
+  result: PredictionResult;
+  year: number;
+  month: number;
+}
+
+const AQIPredictionResult = ({ result, year, month }: AQIPredictionResultProps) => {
+  const category = getAQICategory(result.predictedAQI);
+  const confidenceLabel = getConfidenceLabel(result.confidence);
+
+  const getTrendIcon = () => {
+    switch (result.trend) {
+      case 'improving':
+        return <TrendingDown className="h-4 w-4 text-green-600" />;
+      case 'worsening':
+        return <TrendingUp className="h-4 w-4 text-red-600" />;
+      default:
+        return <Minus className="h-4 w-4 text-yellow-600" />;
+    }
+  };
+
+  const getTrendText = () => {
+    switch (result.trend) {
+      case 'improving':
+        return 'Air quality is improving year-over-year';
+      case 'worsening':
+        return 'Air quality is declining year-over-year';
+      default:
+        return 'Air quality remains stable';
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Main Result Card */}
+      <Card 
+        className="border-2 shadow-xl overflow-hidden"
+        style={{ borderColor: category.color }}
+      >
+        <div 
+          className="h-2 w-full"
+          style={{ backgroundColor: category.color }}
+        />
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center justify-between">
+            <span className="text-lg text-muted-foreground">
+              Prediction for {getMonthName(month)} {year}
+            </span>
+            <Badge 
+              className="text-sm px-3 py-1"
+              style={{ 
+                backgroundColor: category.bgColor,
+                color: category.textColor,
+                border: `1px solid ${category.color}`
+              }}
+            >
+              {category.name}
+            </Badge>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* AQI Value */}
+          <div className="text-center py-4">
+            <div 
+              className="text-7xl font-bold mb-2"
+              style={{ color: category.color }}
+            >
+              {result.predictedAQI}
+            </div>
+            <p className="text-muted-foreground">Predicted AQI Value</p>
+          </div>
+
+          {/* Confidence Meter */}
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Prediction Confidence</span>
+              <span className="font-medium">{result.confidence}% ({confidenceLabel})</span>
+            </div>
+            <Progress value={result.confidence} className="h-2" />
+          </div>
+
+          {/* Trend Indicator */}
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
+            {getTrendIcon()}
+            <span className="text-sm">{getTrendText()}</span>
+          </div>
+
+          {/* Seasonal Context */}
+          <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/50">
+            <Activity className="h-4 w-4 mt-0.5 text-primary" />
+            <span className="text-sm">{result.seasonalFactor}</span>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Health Advisory Card */}
+      <Card className="border shadow-lg">
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Shield className="h-5 w-5 text-primary" />
+            Health Advisory
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div 
+            className="p-4 rounded-lg"
+            style={{ backgroundColor: category.bgColor }}
+          >
+            <div className="flex items-start gap-3">
+              <AlertTriangle 
+                className="h-5 w-5 mt-0.5 flex-shrink-0"
+                style={{ color: category.color }}
+              />
+              <div>
+                <p 
+                  className="font-medium mb-1"
+                  style={{ color: category.textColor }}
+                >
+                  {category.healthImplication}
+                </p>
+                <p 
+                  className="text-sm"
+                  style={{ color: category.textColor, opacity: 0.85 }}
+                >
+                  {category.advisory}
+                </p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default AQIPredictionResult;
