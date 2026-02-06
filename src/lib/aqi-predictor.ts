@@ -1,10 +1,12 @@
 import { historicalAQIData, type AQIDataPoint } from './aqi-data';
+import { getLocationById } from './locations';
 
 export interface PredictionResult {
   predictedAQI: number;
   confidence: number;
   trend: 'improving' | 'stable' | 'worsening';
   seasonalFactor: string;
+  locationFactor?: string;
 }
 
 /**
@@ -15,7 +17,7 @@ export interface PredictionResult {
  * 2. Apply seasonal adjustment based on historical monthly patterns
  * 3. Add confidence interval based on prediction distance
  */
-export const predictAQI = (targetYear: number, targetMonth: number): PredictionResult => {
+export const predictAQI = (targetYear: number, targetMonth: number, locationId?: string): PredictionResult => {
   // Step 1: Calculate yearly averages for trend analysis
   const yearlyAverages = calculateYearlyAverages();
   
@@ -30,7 +32,17 @@ export const predictAQI = (targetYear: number, targetMonth: number): PredictionR
   
   // Step 5: Apply seasonal adjustment
   const seasonalAdjustment = seasonalFactors[targetMonth - 1];
-  const predictedAQI = Math.round(baselineAQI + seasonalAdjustment);
+  let predictedAQI = Math.round(baselineAQI + seasonalAdjustment);
+  
+  // Step 5.5: Apply location modifier if provided
+  let locationFactor: string | undefined;
+  if (locationId) {
+    const location = getLocationById(locationId);
+    if (location) {
+      predictedAQI += location.aqiModifier;
+      locationFactor = location.description;
+    }
+  }
   
   // Step 6: Clamp to valid AQI range (0-500)
   const clampedAQI = Math.max(0, Math.min(500, predictedAQI));
@@ -49,6 +61,7 @@ export const predictAQI = (targetYear: number, targetMonth: number): PredictionR
     confidence,
     trend,
     seasonalFactor,
+    locationFactor,
   };
 };
 

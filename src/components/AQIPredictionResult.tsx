@@ -3,18 +3,21 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { getAQICategory, getConfidenceLabel } from '@/lib/aqi-utils';
 import { getMonthName } from '@/lib/aqi-data';
+import { getLocationById } from '@/lib/locations';
 import type { PredictionResult } from '@/lib/aqi-predictor';
-import { Activity, AlertTriangle, TrendingDown, TrendingUp, Minus, Shield } from 'lucide-react';
+import { Activity, AlertTriangle, TrendingDown, TrendingUp, Minus, Shield, MapPin } from 'lucide-react';
 
 interface AQIPredictionResultProps {
   result: PredictionResult;
   year: number;
   month: number;
+  locationId?: string;
 }
 
-const AQIPredictionResult = ({ result, year, month }: AQIPredictionResultProps) => {
+const AQIPredictionResult = ({ result, year, month, locationId }: AQIPredictionResultProps) => {
   const category = getAQICategory(result.predictedAQI);
   const confidenceLabel = getConfidenceLabel(result.confidence);
+  const location = locationId ? getLocationById(locationId) : undefined;
 
   const getTrendIcon = () => {
     switch (result.trend) {
@@ -50,9 +53,9 @@ const AQIPredictionResult = ({ result, year, month }: AQIPredictionResultProps) 
           style={{ backgroundColor: category.color }}
         />
         <CardHeader className="pb-2">
-          <CardTitle className="flex items-center justify-between">
+          <CardTitle className="flex items-center justify-between flex-wrap gap-2">
             <span className="text-lg text-muted-foreground">
-              Prediction for {getMonthName(month)} {year}
+              {location ? `${location.name}, ${location.country}` : 'Prediction'} — {getMonthName(month)} {year}
             </span>
             <Badge 
               className="text-sm px-3 py-1"
@@ -86,6 +89,14 @@ const AQIPredictionResult = ({ result, year, month }: AQIPredictionResultProps) 
             </div>
             <Progress value={result.confidence} className="h-2" />
           </div>
+
+          {/* Location Factor */}
+          {result.locationFactor && (
+            <div className="flex items-start gap-2 p-3 rounded-lg bg-muted/50">
+              <MapPin className="h-4 w-4 mt-0.5 text-primary" />
+              <span className="text-sm">{result.locationFactor}</span>
+            </div>
+          )}
 
           {/* Trend Indicator */}
           <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
