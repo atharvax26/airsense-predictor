@@ -12,15 +12,16 @@ const Index = () => {
     result: PredictionResult;
     year: number;
     month: number;
+    locationId?: string;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handlePredict = (year: number, month: number) => {
+  const handlePredict = (year: number, month: number, locationId?: string) => {
     setIsLoading(true);
     // Simulate a brief loading state for UX
     setTimeout(() => {
-      const result = predictAQI(year, month);
-      setPrediction({ result, year, month });
+      const result = predictAQI(year, month, locationId);
+      setPrediction({ result, year, month, locationId });
       setIsLoading(false);
     }, 500);
   };
@@ -61,6 +62,7 @@ const Index = () => {
                 result={prediction.result}
                 year={prediction.year}
                 month={prediction.month}
+                locationId={prediction.locationId}
               />
             )}
 
