@@ -43,13 +43,10 @@ const AQIPredictionForm = ({ onPredict, isLoading }: AQIPredictionFormProps) => 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="space-y-2">
-              <Label htmlFor="location" className="flex items-center gap-1.5">
-                <MapPin className="h-3.5 w-3.5" />
-                Location
-              </Label>
+              <Label htmlFor="location">Select Location</Label>
               <Select value={selectedLocation} onValueChange={setSelectedLocation}>
                 <SelectTrigger id="location" className="w-full bg-background">
-                  <SelectValue placeholder="Select city" />
+                  <SelectValue placeholder="Choose city" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover z-50">
                   {locations.map((location) => (
