@@ -4,6 +4,7 @@ import AQIPredictionResult from '@/components/AQIPredictionResult';
 import AQICharts from '@/components/AQICharts';
 import AQICategoryGuide from '@/components/AQICategoryGuide';
 import AQIStatsCards from '@/components/AQIStatsCards';
+import ThemeToggle from '@/components/ThemeToggle';
 import { predictAQI, type PredictionResult } from '@/lib/aqi-predictor';
 import { Wind } from 'lucide-react';
 
@@ -31,14 +32,17 @@ const Index = () => {
       {/* Header */}
       <header className="border-b bg-card/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <Wind className="h-6 w-6 text-primary" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-primary/10">
+                <Wind className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold">AQI Prediction Dashboard</h1>
+                <p className="text-sm text-muted-foreground">Air Quality Index Forecasting System</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-bold">AQI Prediction Dashboard</h1>
-              <p className="text-sm text-muted-foreground">Air Quality Index Forecasting System</p>
-            </div>
+            <ThemeToggle />
           </div>
         </div>
       </header>
