@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import AQIPredictionForm from '@/components/AQIPredictionForm';
 import AQIPredictionResult from '@/components/AQIPredictionResult';
 import AQICharts from '@/components/AQICharts';
@@ -6,11 +6,13 @@ import AQICategoryGuide from '@/components/AQICategoryGuide';
 import AQIStatsCards from '@/components/AQIStatsCards';
 import WeatherDashboard from '@/components/WeatherDashboard';
 import ThemeToggle from '@/components/ThemeToggle';
+import IntroAnimation from '@/components/IntroAnimation';
 import { predictAQI, type PredictionResult } from '@/lib/aqi-predictor';
 import { Wind, Cloud } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Index = () => {
+  const [showIntro, setShowIntro] = useState(true);
   const [prediction, setPrediction] = useState<{
     result: PredictionResult;
     year: number;
@@ -20,15 +22,22 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'aqi' | 'weather'>('aqi');
 
+  const handleIntroComplete = useCallback(() => {
+    setShowIntro(false);
+  }, []);
+
   const handlePredict = (year: number, month: number, locationId?: string) => {
     setIsLoading(true);
-    // Simulate a brief loading state for UX
     setTimeout(() => {
       const result = predictAQI(year, month, locationId);
       setPrediction({ result, year, month, locationId });
       setIsLoading(false);
     }, 500);
   };
+
+  if (showIntro) {
+    return <IntroAnimation onComplete={handleIntroComplete} />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
