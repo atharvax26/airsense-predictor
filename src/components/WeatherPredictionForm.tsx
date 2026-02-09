@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Calendar, TrendingUp } from 'lucide-react';
 import { monthNames } from '@/lib/weather-data';
 import { locations } from '@/lib/locations';
+import InfiniteYearSelect from '@/components/InfiniteYearSelect';
 
 interface WeatherPredictionFormProps {
   onPredict: (year: number, month: number, locationId?: string) => void;
@@ -16,9 +17,6 @@ const WeatherPredictionForm = ({ onPredict, isLoading }: WeatherPredictionFormPr
   const [selectedYear, setSelectedYear] = useState<string>('');
   const [selectedMonth, setSelectedMonth] = useState<string>('');
   const [selectedLocation, setSelectedLocation] = useState<string>('');
-
-  const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 7 }, (_, i) => currentYear + i);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,18 +63,11 @@ const WeatherPredictionForm = ({ onPredict, isLoading }: WeatherPredictionFormPr
 
             <div className="space-y-2">
               <Label htmlFor="year">Select Year</Label>
-              <Select value={selectedYear} onValueChange={setSelectedYear}>
-                <SelectTrigger id="year" className="w-full bg-background">
-                  <SelectValue placeholder="Choose year" />
-                </SelectTrigger>
-                <SelectContent className="bg-popover z-50">
-                  {years.map((year) => (
-                    <SelectItem key={year} value={year.toString()}>
-                      {year}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <InfiniteYearSelect 
+                id="year"
+                value={selectedYear} 
+                onValueChange={setSelectedYear} 
+              />
             </div>
 
             <div className="space-y-2">
