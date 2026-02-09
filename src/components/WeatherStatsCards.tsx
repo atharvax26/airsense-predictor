@@ -50,13 +50,16 @@ const WeatherStatsCards = () => {
   return (
     <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => (
-        <Card key={stat.title} className="shadow-md">
+        <Card 
+          key={stat.title} 
+          className="shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 cursor-pointer group"
+        >
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-muted-foreground font-medium">{stat.title}</p>
+                <p className="text-xs text-muted-foreground font-medium transition-colors duration-300 group-hover:text-foreground">{stat.title}</p>
                 <p 
-                  className="text-2xl font-bold mt-1"
+                  className="text-2xl font-bold mt-1 transition-transform duration-300 group-hover:scale-105 origin-left"
                   style={{ color: stat.color }}
                 >
                   {stat.value}
@@ -64,7 +67,7 @@ const WeatherStatsCards = () => {
                 <p className="text-xs text-muted-foreground mt-0.5">{stat.subtitle}</p>
               </div>
               <stat.icon 
-                className="h-8 w-8 opacity-20"
+                className="h-8 w-8 opacity-20 transition-all duration-300 group-hover:opacity-40 group-hover:scale-110"
                 style={{ color: stat.color }}
               />
             </div>
