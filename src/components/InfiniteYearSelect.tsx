@@ -62,6 +62,7 @@ const InfiniteYearSelect = ({ value, onValueChange, id }: InfiniteYearSelectProp
         className="bg-popover z-50 max-h-[200px]"
         onScroll={handleScroll}
         ref={scrollRef}
+        side="bottom"
       >
         {yearRange.start > 1900 && (
           <div 
