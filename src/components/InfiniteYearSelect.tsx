@@ -63,6 +63,7 @@ const InfiniteYearSelect = ({ value, onValueChange, id }: InfiniteYearSelectProp
         onScroll={handleScroll}
         ref={scrollRef}
         side="bottom"
+        avoidCollisions={false}
       >
         {yearRange.start > 1900 && (
           <div 
