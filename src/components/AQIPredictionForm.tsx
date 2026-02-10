@@ -76,7 +76,7 @@ const AQIPredictionForm = ({ onPredict, isLoading }: AQIPredictionFormProps) => 
                 <SelectTrigger id="month" className="w-full bg-background">
                   <SelectValue placeholder="Choose month" />
                 </SelectTrigger>
-                <SelectContent className="bg-popover z-50" side="bottom">
+                <SelectContent className="bg-popover z-50" side="bottom" avoidCollisions={false}>
                   {monthNames.map((month, idx) => (
                     <SelectItem key={month} value={(idx + 1).toString()}>
                       {month}
