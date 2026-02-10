@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import AQIPredictionForm from '@/components/AQIPredictionForm';
 import AQIPredictionResult from '@/components/AQIPredictionResult';
 import AQICharts from '@/components/AQICharts';
@@ -21,6 +21,13 @@ const Index = () => {
   } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'aqi' | 'weather'>('aqi');
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
+
+  const handleTabChange = (value: string) => {
+    const newTab = value as 'aqi' | 'weather';
+    setSlideDirection(newTab === 'weather' ? 'right' : 'left');
+    setActiveTab(newTab);
+  };
 
   const handleIntroComplete = useCallback(() => {
     setShowIntro(false);
@@ -63,7 +70,7 @@ const Index = () => {
       <main className="container mx-auto px-4 py-8">
         {/* Dashboard Toggle */}
         <div className="mb-6">
-          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'aqi' | 'weather')}>
+          <Tabs value={activeTab} onValueChange={handleTabChange}>
             <TabsList className="grid w-full max-w-md grid-cols-2">
               <TabsTrigger value="aqi" className="flex items-center gap-2">
                 <Wind className="h-4 w-4" />
@@ -77,7 +84,7 @@ const Index = () => {
           </Tabs>
         </div>
 
-        <div key={activeTab} className="animate-fade-in">
+        <div key={activeTab} className={slideDirection === 'right' ? 'animate-slide-in-right' : 'animate-slide-in-left'}>
           {activeTab === 'aqi' ? (
             <>
               {/* Stats Overview */}
