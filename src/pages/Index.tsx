@@ -77,55 +77,57 @@ const Index = () => {
           </Tabs>
         </div>
 
-        {activeTab === 'aqi' ? (
-          <>
-            {/* Stats Overview */}
-            <section className="mb-8">
-              <h2 className="text-lg font-semibold mb-4 text-muted-foreground">Overview</h2>
-              <AQIStatsCards />
-            </section>
+        <div key={activeTab} className="animate-fade-in">
+          {activeTab === 'aqi' ? (
+            <>
+              {/* Stats Overview */}
+              <section className="mb-8">
+                <h2 className="text-lg font-semibold mb-4 text-muted-foreground">Overview</h2>
+                <AQIStatsCards />
+              </section>
 
-            {/* Main Grid */}
-            <div className="grid gap-8 lg:grid-cols-3">
-              {/* Left Column - Prediction Form & Result */}
-              <div className="lg:col-span-2 space-y-6">
-                <AQIPredictionForm onPredict={handlePredict} isLoading={isLoading} />
-                
-                {prediction && (
-                  <AQIPredictionResult
-                    result={prediction.result}
-                    year={prediction.year}
-                    month={prediction.month}
-                    locationId={prediction.locationId}
-                  />
-                )}
+              {/* Main Grid */}
+              <div className="grid gap-8 lg:grid-cols-3">
+                {/* Left Column - Prediction Form & Result */}
+                <div className="lg:col-span-2 space-y-6">
+                  <AQIPredictionForm onPredict={handlePredict} isLoading={isLoading} />
+                  
+                  {prediction && (
+                    <AQIPredictionResult
+                      result={prediction.result}
+                      year={prediction.year}
+                      month={prediction.month}
+                      locationId={prediction.locationId}
+                    />
+                  )}
 
-                <AQICharts />
-              </div>
+                  <AQICharts />
+                </div>
 
-              {/* Right Column - Category Guide */}
-              <div className="space-y-6">
-                <AQICategoryGuide />
-                
-                {/* Info Card */}
-                <div className="p-4 rounded-lg bg-muted/50 border">
-                  <h3 className="font-medium mb-2">About This Tool</h3>
-                  <p className="text-sm text-muted-foreground">
-                    This AQI prediction system uses linear regression analysis on historical 
-                    air quality data (2020-2025) combined with seasonal pattern recognition 
-                    to forecast future air quality levels.
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Predictions account for yearly improvement trends and monthly variations 
-                    typical of different seasons.
-                  </p>
+                {/* Right Column - Category Guide */}
+                <div className="space-y-6">
+                  <AQICategoryGuide />
+                  
+                  {/* Info Card */}
+                  <div className="p-4 rounded-lg bg-muted/50 border">
+                    <h3 className="font-medium mb-2">About This Tool</h3>
+                    <p className="text-sm text-muted-foreground">
+                      This AQI prediction system uses linear regression analysis on historical 
+                      air quality data (2020-2025) combined with seasonal pattern recognition 
+                      to forecast future air quality levels.
+                    </p>
+                    <p className="text-sm text-muted-foreground mt-2">
+                      Predictions account for yearly improvement trends and monthly variations 
+                      typical of different seasons.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </>
-        ) : (
-          <WeatherDashboard />
-        )}
+            </>
+          ) : (
+            <WeatherDashboard />
+          )}
+        </div>
       </main>
 
       {/* Footer */}
