@@ -29,13 +29,30 @@ airsense-predictor/
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### Quick Start (Windows)
+
+**Easiest way - Just double-click:**
+```
+run_me.bat
+```
+
+This automatically:
+- Checks dependencies
+- Installs what's needed
+- Starts both backend and frontend
+- Opens your browser
+
+See [BATCH_FILES_GUIDE.md](BATCH_FILES_GUIDE.md) for details.
+
+### Manual Setup
+
+#### Prerequisites
 
 - Node.js & npm (v18+)
 - Python 3.8+
 - pip
 
-### Backend Setup
+#### Backend Setup
 
 1. Navigate to backend directory:
 ```bash
