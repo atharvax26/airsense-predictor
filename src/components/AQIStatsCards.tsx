@@ -58,7 +58,7 @@ const AQIStatsCards = () => {
     );
   }
 
-  const latestCategory = getAQICategory(stats.latest.aqi);
+  const avgCategory = getAQICategory(stats.historical_avg.aqi);
   const improvementColor = stats.improvement.percentage > 0 
     ? 'hsl(142, 76%, 36%)' 
     : stats.improvement.percentage < 0 
@@ -67,16 +67,16 @@ const AQIStatsCards = () => {
 
   const statsCards = [
     {
-      title: 'Latest AQI',
-      value: Math.round(stats.latest.aqi),
-      subtitle: `${stats.latest.city} - ${stats.latest.date}`,
+      title: 'Average AQI',
+      value: Math.round(stats.historical_avg.aqi),
+      subtitle: `All Cities - ${stats.historical_avg.period}`,
       icon: Activity,
-      color: latestCategory.color,
+      color: avgCategory.color,
     },
     {
-      title: 'Historical Avg',
-      value: Math.round(stats.historical_avg.aqi),
-      subtitle: stats.historical_avg.period,
+      title: 'Total Records',
+      value: stats.total_records.toLocaleString(),
+      subtitle: `${stats.historical_avg.period} Dataset`,
       icon: Calendar,
       color: 'hsl(var(--primary))',
     },
