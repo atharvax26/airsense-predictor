@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback } from 'react';
 import AQIPredictionForm from '@/components/AQIPredictionForm';
 import AQIPredictionResult from '@/components/AQIPredictionResult';
 import AQICharts from '@/components/AQICharts';
@@ -7,9 +7,11 @@ import AQIStatsCards from '@/components/AQIStatsCards';
 import WeatherDashboard from '@/components/WeatherDashboard';
 import ThemeToggle from '@/components/ThemeToggle';
 import IntroAnimation from '@/components/IntroAnimation';
-import { predictAQI, type PredictionResult } from '@/lib/aqi-predictor';
+import { type PredictionResult } from '@/lib/aqi-predictor';
+import { predictAQI as apiPredictAQI } from '@/lib/api';
 import { Wind, Cloud } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [showIntro, setShowIntro] = useState(true);
@@ -22,6 +24,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'aqi' | 'weather'>('aqi');
   const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
+  const { toast } = useToast();
 
   const handleTabChange = (value: string) => {
     const newTab = value as 'aqi' | 'weather';
@@ -33,13 +36,48 @@ const Index = () => {
     setShowIntro(false);
   }, []);
 
-  const handlePredict = (year: number, month: number, locationId?: string) => {
+  const handlePredict = async (year: number, month: number, locationId?: string) => {
+    if (!locationId) {
+      toast({
+        title: "City Required",
+        description: "Please select a city to get AQI prediction",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
-    setTimeout(() => {
-      const result = predictAQI(year, month, locationId);
+    try {
+      const apiResponse = await apiPredictAQI({
+        city: locationId,
+        year,
+        month,
+      });
+
+      // Convert API response to PredictionResult format
+      const result: PredictionResult = {
+        predictedAQI: apiResponse.aqi,
+        confidence: 85, // Default confidence
+        trend: 'stable', // Could be enhanced based on historical data
+        seasonalFactor: `${apiResponse.category} air quality expected`,
+        locationFactor: `Prediction for ${apiResponse.city}`,
+      };
+
       setPrediction({ result, year, month, locationId });
+      
+      toast({
+        title: "Prediction Complete",
+        description: `AQI for ${apiResponse.city}: ${apiResponse.aqi} (${apiResponse.category})`,
+      });
+    } catch (error) {
+      toast({
+        title: "Prediction Failed",
+        description: error instanceof Error ? error.message : "Failed to get prediction",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-    }, 500);
+    }
   };
 
   if (showIntro) {

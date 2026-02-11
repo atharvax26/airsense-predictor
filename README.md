@@ -1,73 +1,183 @@
-# Welcome to your Lovable project
+# AirSense Predictor - AQI Prediction Dashboard
 
-## Project info
+A full-stack Air Quality Index (AQI) prediction system with machine learning backend and interactive React frontend.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🌟 Features
 
-## How can I edit this code?
+- **Real-time AQI Predictions** - ML-powered predictions using Random Forest model
+- **Interactive Dashboard** - Beautiful UI with charts and visualizations
+- **Multiple Cities** - Support for Delhi, Mumbai, and Bengaluru
+- **Historical Data Analysis** - Based on 2020-2024 AQI data
+- **Weather Integration** - Additional weather dashboard
+- **Dark/Light Mode** - Theme toggle support
 
-There are several ways of editing your application.
+## 🏗️ Project Structure
 
-**Use Lovable**
+```
+airsense-predictor/
+├── backend/              # Flask API with ML model
+│   ├── app.py           # Flask server
+│   ├── *.pkl            # Trained model files
+│   ├── AQI_DATA.csv     # Historical dataset
+│   └── requirements.txt # Python dependencies
+├── src/                 # React frontend
+│   ├── components/      # UI components
+│   ├── lib/            # Utilities and API client
+│   └── pages/          # Page components
+└── ...
+```
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## 🚀 Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js & npm (v18+)
+- Python 3.8+
+- pip
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Backend Setup
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Navigate to backend directory:
+```bash
+cd backend
+```
 
-Follow these steps:
+2. Install Python dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+3. Start the Flask server:
+```bash
+python app.py
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+The backend will run on `http://localhost:5000`
 
-# Step 3: Install the necessary dependencies.
-npm i
+### Frontend Setup
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+1. Navigate to project root:
+```bash
+cd ..
+```
+
+2. Install npm dependencies:
+```bash
+npm install
+```
+
+3. Create `.env` file (or copy from `.env.example`):
+```bash
+VITE_API_URL=http://localhost:5000
+```
+
+4. Start the development server:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The frontend will run on `http://localhost:5173`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📡 API Usage
 
-**Use GitHub Codespaces**
+### Predict AQI
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+curl -X POST http://localhost:5000/predict \
+  -H "Content-Type: application/json" \
+  -d '{"city":"Delhi","year":2025,"month":6}'
+```
 
-## What technologies are used for this project?
+**Response:**
+```json
+{
+  "aqi": 156.23,
+  "category": "Moderate",
+  "city": "Delhi",
+  "year": 2025,
+  "month": 6
+}
+```
 
-This project is built with:
+### Available Cities
+- Delhi
+- Mumbai
+- Bengaluru
 
-- Vite
+### AQI Categories
+- **Good** (0-50): Minimal impact
+- **Satisfactory** (51-100): Minor breathing discomfort
+- **Moderate** (101-200): Breathing discomfort for sensitive groups
+- **Poor** (201-300): Breathing discomfort for most people
+- **Very Poor** (301-400): Respiratory illness on prolonged exposure
+- **Severe** (400+): Affects healthy people, serious impact on those with existing diseases
+
+## 🛠️ Technologies Used
+
+### Frontend
+- React 18
 - TypeScript
-- React
-- shadcn-ui
+- Vite
 - Tailwind CSS
+- shadcn/ui
+- Recharts (for visualizations)
+- React Query
 
-## How can I deploy this project?
+### Backend
+- Flask
+- Flask-CORS
+- scikit-learn
+- pandas
+- numpy
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## 📊 Model Information
 
-## Can I connect a custom domain to my Lovable project?
+The prediction model uses:
+- **Algorithm**: Random Forest Regression
+- **Training Data**: Historical AQI data from 2020-2024
+- **Features**: City, Year, Month, Quarter, Historical pollutant averages (PM2.5, PM10, NO2, NH3, SO2, CO, O3)
+- **Output**: Predicted AQI value and category
 
-Yes, you can!
+## 🧪 Testing
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Run frontend tests:
+```bash
+npm test
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Test backend API:
+```bash
+cd backend
+python -c "import requests; print(requests.post('http://localhost:5000/predict', json={'city':'Delhi','year':2025,'month':6}).json())"
+```
+
+## 📦 Deployment
+
+### Frontend
+Deploy to Vercel, Netlify, or any static hosting:
+```bash
+npm run build
+```
+
+### Backend
+Deploy to Heroku, Render, Railway, or any Python hosting platform.
+
+**Important**: Update `VITE_API_URL` in frontend to point to your deployed backend URL.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+## 📝 License
+
+This project is open source and available under the MIT License.
+
+## 🙏 Acknowledgments
+
+- Historical AQI data from Indian pollution monitoring stations
+- Built with React and Flask
+- UI components from shadcn/ui

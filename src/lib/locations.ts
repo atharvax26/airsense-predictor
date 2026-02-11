@@ -9,21 +9,21 @@ export interface Location {
 
 export const locations: Location[] = [
   {
-    id: 'delhi',
+    id: 'Delhi',
     name: 'Delhi',
     country: 'India',
     aqiModifier: 45,
     description: 'High pollution from traffic and industry',
   },
   {
-    id: 'mumbai',
+    id: 'Mumbai',
     name: 'Mumbai',
     country: 'India',
     aqiModifier: 30,
     description: 'Coastal city with industrial and vehicular pollution',
   },
   {
-    id: 'bengaluru',
+    id: 'Bengaluru',
     name: 'Bengaluru',
     country: 'India',
     aqiModifier: 15,
