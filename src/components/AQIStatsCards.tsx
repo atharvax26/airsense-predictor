@@ -1,57 +1,104 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { historicalAQIData } from '@/lib/aqi-data';
 import { getAQICategory } from '@/lib/aqi-utils';
 import { Activity, Calendar, TrendingDown, Leaf } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { getStats, type StatsResponse } from '@/lib/api';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const AQIStatsCards = () => {
-  // Calculate stats
-  const latestData = historicalAQIData[historicalAQIData.length - 1];
-  const latestCategory = getAQICategory(latestData.aqi);
-  
-  const allAQIs = historicalAQIData.map(d => d.aqi);
-  const avgAQI = Math.round(allAQIs.reduce((a, b) => a + b, 0) / allAQIs.length);
-  const bestAQI = Math.min(...allAQIs);
-  
-  // Calculate improvement
-  const firstYearAvg = historicalAQIData.filter(d => d.year === 2020).reduce((sum, d) => sum + d.aqi, 0) / 12;
-  const lastYearData = historicalAQIData.filter(d => d.year === 2025);
-  const lastYearAvg = lastYearData.reduce((sum, d) => sum + d.aqi, 0) / lastYearData.length;
-  const improvement = Math.round(((firstYearAvg - lastYearAvg) / firstYearAvg) * 100);
+  const [stats, setStats] = useState<StatsResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const stats = [
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setLoading(true);
+        const data = await getStats();
+        setStats(data);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load statistics');
+        console.error('Failed to fetch stats:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+        {[1, 2, 3, 4].map((i) => (
+          <Card key={i} className="shadow-md">
+            <CardContent className="p-4">
+              <Skeleton className="h-4 w-20 mb-2" />
+              <Skeleton className="h-8 w-16 mb-1" />
+              <Skeleton className="h-3 w-24" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
+
+  if (error || !stats) {
+    return (
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+        <Card className="shadow-md col-span-2 lg:col-span-4">
+          <CardContent className="p-4">
+            <p className="text-sm text-muted-foreground">
+              {error || 'Unable to load statistics. Make sure the backend is running.'}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const latestCategory = getAQICategory(stats.latest.aqi);
+  const improvementColor = stats.improvement.percentage > 0 
+    ? 'hsl(142, 76%, 36%)' 
+    : stats.improvement.percentage < 0 
+    ? 'hsl(0, 84%, 60%)' 
+    : 'hsl(var(--primary))';
+
+  const statsCards = [
     {
       title: 'Latest AQI',
-      value: latestData.aqi,
-      subtitle: latestCategory.name,
+      value: Math.round(stats.latest.aqi),
+      subtitle: `${stats.latest.city} - ${stats.latest.date}`,
       icon: Activity,
       color: latestCategory.color,
     },
     {
       title: 'Historical Avg',
-      value: avgAQI,
-      subtitle: '2020-2025',
+      value: Math.round(stats.historical_avg.aqi),
+      subtitle: stats.historical_avg.period,
       icon: Calendar,
       color: 'hsl(var(--primary))',
     },
     {
       title: 'Best Recorded',
-      value: bestAQI,
-      subtitle: 'All time low',
+      value: Math.round(stats.best_recorded.aqi),
+      subtitle: `${stats.best_recorded.city} - ${stats.best_recorded.date}`,
       icon: Leaf,
       color: 'hsl(142, 76%, 36%)',
     },
     {
       title: 'Improvement',
-      value: `${improvement}%`,
-      subtitle: 'Since 2020',
+      value: `${stats.improvement.percentage > 0 ? '+' : ''}${stats.improvement.percentage}%`,
+      subtitle: `Since ${stats.improvement.from_year}`,
       icon: TrendingDown,
-      color: improvement > 0 ? 'hsl(142, 76%, 36%)' : 'hsl(0, 84%, 60%)',
+      color: improvementColor,
     },
   ];
 
   return (
     <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
-      {stats.map((stat) => (
+      {statsCards.map((stat) => (
         <Card 
           key={stat.title} 
           className="shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1 cursor-pointer group"
