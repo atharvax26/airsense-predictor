@@ -50,6 +50,16 @@ export interface StatsResponse {
   total_records: number;
 }
 
+export interface YearlyTrendData {
+  year: number;
+  avgAQI: number;
+}
+
+export interface MonthlyAverageData {
+  month: string;
+  avgAQI: number;
+}
+
 /**
  * Call the Flask backend to get AQI prediction
  */
@@ -111,5 +121,49 @@ export const getStats = async (): Promise<StatsResponse> => {
       throw error;
     }
     throw new Error('Failed to connect to statistics service');
+  }
+};
+
+/**
+ * Get yearly trend data for charts
+ */
+export const getYearlyTrend = async (): Promise<YearlyTrendData[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/charts/yearly`);
+
+    if (!response.ok) {
+      const errorData: ErrorResponse = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch yearly trend');
+    }
+
+    const data: YearlyTrendData[] = await response.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('Failed to connect to chart service');
+  }
+};
+
+/**
+ * Get monthly averages data for charts
+ */
+export const getMonthlyAverages = async (): Promise<MonthlyAverageData[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/charts/monthly`);
+
+    if (!response.ok) {
+      const errorData: ErrorResponse = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch monthly averages');
+    }
+
+    const data: MonthlyAverageData[] = await response.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('Failed to connect to chart service');
   }
 };

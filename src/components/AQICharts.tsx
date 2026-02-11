@@ -1,13 +1,39 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
-import { getMonthlyAverages, getYearlyTrend } from '@/lib/aqi-predictor';
 import { getAQIColor } from '@/lib/aqi-utils';
 import { BarChart3, TrendingUp } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { getYearlyTrend, getMonthlyAverages, type YearlyTrendData, type MonthlyAverageData } from '@/lib/api';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const AQICharts = () => {
-  const monthlyData = getMonthlyAverages();
-  const yearlyData = getYearlyTrend();
+  const [yearlyData, setYearlyData] = useState<YearlyTrendData[]>([]);
+  const [monthlyData, setMonthlyData] = useState<MonthlyAverageData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchChartData = async () => {
+      try {
+        setLoading(true);
+        const [yearly, monthly] = await Promise.all([
+          getYearlyTrend(),
+          getMonthlyAverages()
+        ]);
+        setYearlyData(yearly);
+        setMonthlyData(monthly);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load chart data');
+        console.error('Failed to fetch chart data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchChartData();
+  }, []);
 
   const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number }>; label?: string }) => {
     if (active && payload && payload.length) {
@@ -23,6 +49,34 @@ const AQICharts = () => {
     }
     return null;
   };
+
+  if (loading) {
+    return (
+      <Card className="shadow-lg">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">Historical AQI Trends</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-[350px] w-full" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="shadow-lg">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg">Historical AQI Trends</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[300px] flex items-center justify-center">
+            <p className="text-sm text-muted-foreground">{error}</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="shadow-lg">
@@ -55,7 +109,7 @@ const AQICharts = () => {
                   <YAxis 
                     className="text-xs"
                     tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                    domain={[0, 200]}
+                    domain={[0, 'auto']}
                   />
                   <Tooltip content={<CustomTooltip />} />
                   <ReferenceLine y={50} stroke="hsl(142, 76%, 36%)" strokeDasharray="5 5" label="" />
@@ -73,7 +127,7 @@ const AQICharts = () => {
               </ResponsiveContainer>
             </div>
             <p className="text-xs text-muted-foreground text-center mt-2">
-              Average AQI values per year (2020-2025)
+              Average AQI values per year from real dataset
             </p>
           </TabsContent>
 
@@ -90,7 +144,7 @@ const AQICharts = () => {
                   <YAxis 
                     className="text-xs"
                     tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                    domain={[0, 160]}
+                    domain={[0, 'auto']}
                   />
                   <Tooltip content={<CustomTooltip />} />
                   <Bar 
@@ -102,7 +156,7 @@ const AQICharts = () => {
               </ResponsiveContainer>
             </div>
             <p className="text-xs text-muted-foreground text-center mt-2">
-              Average AQI by month across all years
+              Average AQI by month across all years from real dataset
             </p>
           </TabsContent>
         </Tabs>

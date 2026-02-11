@@ -175,3 +175,67 @@ def get_stats():
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
+
+@app.route('/charts/yearly', methods=['GET'])
+def get_yearly_trend():
+    try:
+        # Load the actual dataset
+        df = pd.read_csv('AQI_DATA.csv')
+        
+        # Clean data
+        df = df.dropna(subset=['AQI'])
+        df['Timestamp'] = pd.to_datetime(df['Timestamp'], format='%d-%m-%Y', errors='coerce')
+        df = df.dropna(subset=['Timestamp'])
+        df['Year'] = df['Timestamp'].dt.year
+        
+        # Calculate yearly averages
+        yearly_avg = df.groupby('Year')['AQI'].mean().reset_index()
+        yearly_avg.columns = ['year', 'avgAQI']
+        
+        # Convert to list of dicts
+        result = []
+        for _, row in yearly_avg.iterrows():
+            result.append({
+                'year': int(row['year']),
+                'avgAQI': round(float(row['avgAQI']), 2)
+            })
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/charts/monthly', methods=['GET'])
+def get_monthly_averages():
+    try:
+        # Load the actual dataset
+        df = pd.read_csv('AQI_DATA.csv')
+        
+        # Clean data
+        df = df.dropna(subset=['AQI'])
+        df['Timestamp'] = pd.to_datetime(df['Timestamp'], format='%d-%m-%Y', errors='coerce')
+        df = df.dropna(subset=['Timestamp'])
+        df['Month'] = df['Timestamp'].dt.month
+        
+        # Calculate monthly averages
+        monthly_avg = df.groupby('Month')['AQI'].mean().reset_index()
+        monthly_avg.columns = ['month_num', 'avgAQI']
+        
+        # Month names
+        month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        
+        # Convert to list of dicts
+        result = []
+        for _, row in monthly_avg.iterrows():
+            month_idx = int(row['month_num']) - 1
+            result.append({
+                'month': month_names[month_idx],
+                'avgAQI': round(float(row['avgAQI']), 2)
+            })
+        
+        return jsonify(result)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
