@@ -82,16 +82,18 @@ echo Press Ctrl+C in each window to stop the servers
 echo.
 
 REM Start backend in a new window
-start "AQI Backend (Flask)" cmd /k "cd backend && echo Starting Flask Backend... && python app.py"
+start "AQI Backend (Flask)" cmd /k "cd /d "%~dp0backend" && echo Starting Flask Backend... && python app.py"
 
 REM Wait a bit for backend to start
-timeout /t 3 /nobreak >nul
+echo Waiting for backend to start...
+timeout /t 5 /nobreak >nul
 
 REM Start frontend in a new window
-start "AQI Frontend (Vite)" cmd /k "echo Starting Vite Frontend... && npm run dev"
+start "AQI Frontend (Vite)" cmd /k "cd /d "%~dp0" && echo Starting Vite Frontend... && npm run dev"
 
 REM Wait a bit for frontend to start
-timeout /t 5 /nobreak >nul
+echo Waiting for frontend to start...
+timeout /t 8 /nobreak >nul
 
 REM Open browser
 echo.
