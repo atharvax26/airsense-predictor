@@ -34,14 +34,14 @@ If the automated batch files aren't working, follow this manual guide.
    ```
 4. You should see:
    ```
-   Local: http://localhost:5173/
+   Local: http://localhost:8080/
    ```
 5. **Keep this window open!**
 
 ### Step 3: Open Browser
 
 1. Open your browser
-2. Go to: http://localhost:5173
+2. Go to: http://localhost:8080
 3. You should see the AQI Dashboard!
 
 ## Troubleshooting Each Step
@@ -108,7 +108,7 @@ npm run dev
 
 ### Browser
 ```
-http://localhost:5173
+http://localhost:8080
 ```
 
 ## Verify Everything is Working
@@ -122,7 +122,7 @@ Should show:
 ```
 
 ### Check Frontend
-Open: http://localhost:5173
+Open: http://localhost:8080
 
 Should show the AQI Dashboard interface
 
@@ -174,9 +174,9 @@ Should return JSON with AQI prediction.
 ## Success Checklist
 
 - [ ] Backend terminal shows "Running on http://127.0.0.1:5000"
-- [ ] Frontend terminal shows "Local: http://localhost:5173/"
+- [ ] Frontend terminal shows "Local: http://localhost:8080/"
 - [ ] http://localhost:5000/health returns {"status":"healthy"}
-- [ ] http://localhost:5173 shows the dashboard
+- [ ] http://localhost:8080 shows the dashboard
 - [ ] Can select city, year, month
 - [ ] Clicking "Predict AQI" shows results
 - [ ] No errors in browser console (F12)
@@ -186,7 +186,7 @@ Should return JSON with AQI prediction.
 | Component | URL | Command |
 |-----------|-----|---------|
 | Backend | http://localhost:5000 | `cd backend && python app.py` |
-| Frontend | http://localhost:5173 | `npm run dev` |
+| Frontend | http://localhost:8080 | `npm run dev` |
 | Health Check | http://localhost:5000/health | `curl http://localhost:5000/health` |
 
 ## Need More Help?

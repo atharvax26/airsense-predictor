@@ -76,7 +76,7 @@ echo   Starting Backend and Frontend...
 echo ========================================
 echo.
 echo Backend will run on: http://localhost:5000
-echo Frontend will run on: http://localhost:5173
+echo Frontend will run on: http://localhost:8080
 echo.
 echo Press Ctrl+C in each window to stop the servers
 echo.
@@ -99,7 +99,7 @@ REM Open browser
 echo.
 echo Opening browser...
 timeout /t 3 /nobreak >nul
-start http://localhost:5173
+start http://localhost:8080
 
 echo.
 echo ========================================
@@ -111,7 +111,8 @@ echo   1. Backend (Flask) - Keep this running
 echo   2. Frontend (Vite) - Keep this running
 echo.
 echo Your browser should open automatically.
-echo If not, go to: http://localhost:5173
+echo If not, check the frontend terminal for the actual URL
+echo (Usually http://localhost:8080 or http://localhost:5173)
 echo.
 echo To stop the servers:
 echo   - Close both terminal windows, or

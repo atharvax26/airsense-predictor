@@ -116,11 +116,11 @@ if not errorlevel 1 (
     echo [PASS] Port 5000 is available
 )
 
-netstat -ano | findstr ":5173" >nul 2>&1
+netstat -ano | findstr ":8080" >nul 2>&1
 if not errorlevel 1 (
-    echo [WARN] Port 5173 is in use
+    echo [WARN] Port 8080 is in use
 ) else (
-    echo [PASS] Port 5173 is available
+    echo [PASS] Port 8080 is available
 )
 echo.
 

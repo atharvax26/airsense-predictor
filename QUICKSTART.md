@@ -39,12 +39,12 @@ You should see:
 ```
   VITE v5.x.x  ready in xxx ms
 
-  ➜  Local:   http://localhost:5173/
+  ➜  Local:   http://localhost:8080/
 ```
 
 ## Step 3: Open the App
 
-Open your browser and go to: **http://localhost:5173**
+Open your browser and go to: **http://localhost:8080**
 
 ## Step 4: Make a Prediction
 
