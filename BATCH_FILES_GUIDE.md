@@ -80,12 +80,23 @@ Just double-click `run_me.bat` - everything starts automatically!
 
 ### "Failed to install backend dependencies"
 
-**Solution:**
+**Solution 1 - Use dedicated installer:**
+```bash
+install_backend.bat
+```
+
+**Solution 2 - Manual installation:**
 ```bash
 cd backend
-pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install flask flask-cors
+python -m pip install numpy
+python -m pip install pandas
+python -m pip install scikit-learn
 ```
+
+**Solution 3 - See detailed fix guide:**
+Check `WINDOWS_INSTALL_FIX.md` for comprehensive solutions.
 
 ### "Failed to install frontend dependencies"
 

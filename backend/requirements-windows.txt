@@ -1,0 +1,9 @@
+# Windows-friendly versions with pre-built wheels
+flask==3.0.0
+flask-cors==4.0.0
+# Install numpy first (has pre-built wheels)
+numpy>=1.24.0,<2.0.0
+# Then pandas (depends on numpy)
+pandas>=2.0.0,<3.0.0
+# Then scikit-learn (depends on both)
+scikit-learn>=1.3.0,<2.0.0

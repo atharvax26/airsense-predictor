@@ -31,12 +31,26 @@ cd backend
 python -c "import flask" >nul 2>&1
 if errorlevel 1 (
     echo [INFO] Installing backend dependencies...
-    pip install -r requirements.txt
+    echo [INFO] Upgrading pip first...
+    python -m pip install --upgrade pip
+    echo [INFO] Installing packages (this may take 2-3 minutes)...
+    python -m pip install flask flask-cors
+    python -m pip install numpy
+    python -m pip install pandas
+    python -m pip install scikit-learn
     if errorlevel 1 (
         echo [ERROR] Failed to install backend dependencies
-        pause
-        exit /b 1
+        echo [INFO] Trying alternative installation method...
+        python -m pip install --only-binary :all: numpy pandas scikit-learn
+        if errorlevel 1 (
+            echo [ERROR] Installation failed. Please install manually:
+            echo   cd backend
+            echo   pip install flask flask-cors numpy pandas scikit-learn
+            pause
+            exit /b 1
+        )
     )
+    echo [OK] Backend dependencies installed successfully
 ) else (
     echo [OK] Backend dependencies are installed
 )
