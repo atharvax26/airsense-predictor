@@ -21,6 +21,8 @@ const AQICharts = () => {
           getYearlyTrend(),
           getMonthlyAverages()
         ]);
+        console.log('Yearly data received:', yearly);
+        console.log('Monthly data received:', monthly);
         setYearlyData(yearly);
         setMonthlyData(monthly);
         setError(null);
@@ -99,7 +101,11 @@ const AQICharts = () => {
           <TabsContent value="yearly" className="mt-0">
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={yearlyData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                <LineChart 
+                  data={yearlyData} 
+                  margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+                  key={JSON.stringify(yearlyData)}
+                >
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                   <XAxis 
                     dataKey="year" 
@@ -109,7 +115,7 @@ const AQICharts = () => {
                   <YAxis 
                     className="text-xs"
                     tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                    domain={[0, 'auto']}
+                    domain={[0, 'dataMax + 20']}
                   />
                   <Tooltip content={<CustomTooltip />} />
                   <ReferenceLine y={50} stroke="hsl(142, 76%, 36%)" strokeDasharray="5 5" label="" />
@@ -134,7 +140,11 @@ const AQICharts = () => {
           <TabsContent value="monthly" className="mt-0">
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={monthlyData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                <BarChart 
+                  data={monthlyData} 
+                  margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+                  key={JSON.stringify(monthlyData)}
+                >
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                   <XAxis 
                     dataKey="month" 
@@ -144,7 +154,7 @@ const AQICharts = () => {
                   <YAxis 
                     className="text-xs"
                     tick={{ fill: 'hsl(var(--muted-foreground))' }}
-                    domain={[0, 'auto']}
+                    domain={[0, 'dataMax + 20']}
                   />
                   <Tooltip content={<CustomTooltip />} />
                   <Bar 
