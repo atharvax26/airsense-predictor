@@ -4,26 +4,26 @@ Easy automation scripts for Windows to run the AQI Dashboard.
 
 ## 📁 Available Scripts
 
-### 1. `run_me.bat` - Start Everything
+### 1. `run_simple.bat` - Start Everything
 
 **What it does:**
 - ✅ Checks if Python and Node.js are installed
-- ✅ Installs backend dependencies (if needed)
+- ✅ Checks backend dependencies
 - ✅ Installs frontend dependencies (if needed)
 - ✅ Starts Flask backend in a new window
 - ✅ Starts Vite frontend in a new window
 - ✅ Opens your browser automatically
 
 **How to use:**
-1. Double-click `run_me.bat`
+1. Double-click `run_simple.bat`
 2. Wait for both servers to start
-3. Browser opens automatically to http://localhost:5173
+3. Browser opens automatically to http://localhost:8080
 4. Start using the dashboard!
 
 **What you'll see:**
 - Two command windows will open:
-  - "AQI Backend (Flask)" - Flask server running
-  - "AQI Frontend (Vite)" - Vite dev server running
+  - "AQI Backend" - Flask server running
+  - "AQI Frontend" - Vite dev server running
 - Your default browser opens to the dashboard
 
 ### 2. `stop_servers.bat` - Stop Everything
@@ -41,6 +41,31 @@ Easy automation scripts for Windows to run the AQI Dashboard.
 - Close both terminal windows manually
 - Press Ctrl+C in each window
 
+### 3. `install_backend.bat` - Install Backend Dependencies
+
+**What it does:**
+- ✅ Upgrades pip
+- ✅ Installs Flask and Flask-CORS
+- ✅ Installs NumPy, Pandas, scikit-learn
+
+**When to use:**
+- First time setup
+- After pulling new code
+- If backend dependencies are missing
+
+### 4. `diagnose.bat` - Troubleshooting Tool
+
+**What it does:**
+- ✅ Checks Python and Node.js installation
+- ✅ Verifies all dependencies
+- ✅ Tests backend startup
+- ✅ Checks if ports are available
+
+**When to use:**
+- Something isn't working
+- Need to verify installation
+- Debugging issues
+
 ## 🚀 Quick Start
 
 ### First Time Setup
@@ -49,17 +74,19 @@ Easy automation scripts for Windows to run the AQI Dashboard.
    - Python 3.8+ from https://www.python.org/
    - Node.js 18+ from https://nodejs.org/
 
-2. Double-click `run_me.bat`
+2. Install backend dependencies:
+   - Double-click `install_backend.bat`
 
-3. Wait for installation (first time only):
-   - Backend dependencies install (~1-2 minutes)
+3. Double-click `run_simple.bat`
+
+4. Wait for installation (first time only):
    - Frontend dependencies install (~2-3 minutes)
 
-4. Dashboard opens in your browser!
+5. Dashboard opens in your browser!
 
 ### Daily Use
 
-Just double-click `run_me.bat` - everything starts automatically!
+Just double-click `run_simple.bat` - everything starts automatically!
 
 ## 🔧 Troubleshooting
 
@@ -80,12 +107,12 @@ Just double-click `run_me.bat` - everything starts automatically!
 
 ### "Failed to install backend dependencies"
 
-**Solution 1 - Use dedicated installer:**
+**Solution - Use dedicated installer:**
 ```bash
 install_backend.bat
 ```
 
-**Solution 2 - Manual installation:**
+**Alternative - Manual installation:**
 ```bash
 cd backend
 python -m pip install --upgrade pip
@@ -95,7 +122,7 @@ python -m pip install pandas
 python -m pip install scikit-learn
 ```
 
-**Solution 3 - See detailed fix guide:**
+**See detailed fix guide:**
 Check `WINDOWS_INSTALL_FIX.md` for comprehensive solutions.
 
 ### "Failed to install frontend dependencies"
@@ -119,30 +146,30 @@ npm install
 - Another app is using port 5000
 - Stop that app or change port in `backend/app.py`
 
-**Frontend (Port 5173):**
-- Vite will automatically use next available port (5174, 5175, etc.)
+**Frontend (Port 8080):**
+- Vite will automatically use next available port (8081, 8082, etc.)
 - Check the terminal for the actual port
 
 ### Browser doesn't open automatically
 
 **Solution:**
-- Manually open: http://localhost:5173
+- Manually open: http://localhost:8080
 - Check if popup blocker is preventing it
 
 ## 📝 What Happens Behind the Scenes
 
-### run_me.bat Flow
+### run_simple.bat Flow
 
 ```
 1. Check Python installed → ✓
 2. Check Node.js installed → ✓
-3. Check backend dependencies → Install if needed
+3. Check backend dependencies → Must be pre-installed
 4. Check frontend dependencies → Install if needed
 5. Start backend in new window → Port 5000
-6. Wait 3 seconds
-7. Start frontend in new window → Port 5173
-8. Wait 5 seconds
-9. Open browser → http://localhost:5173
+6. Wait 5 seconds
+7. Start frontend in new window → Port 8080
+8. Wait 10 seconds
+9. Open browser → http://localhost:8080
 10. Done!
 ```
 
@@ -150,8 +177,10 @@ npm install
 
 ```
 airsense-predictor/
-├── run_me.bat           ← Double-click this to start
+├── run_simple.bat       ← Double-click this to start
 ├── stop_servers.bat     ← Double-click this to stop
+├── install_backend.bat  ← Install backend dependencies
+├── diagnose.bat         ← Troubleshooting tool
 ├── backend/
 │   └── app.py          ← Flask server
 └── src/
@@ -171,12 +200,13 @@ airsense-predictor/
 
 ### Restart Servers
 1. Run `stop_servers.bat`
-2. Run `run_me.bat` again
+2. Run `run_simple.bat` again
 
 ### Update Dependencies
 If you pull new code from GitHub:
-1. Delete `node_modules` folder
-2. Run `run_me.bat` (will reinstall everything)
+1. Run `install_backend.bat` for backend updates
+2. Delete `node_modules` folder
+3. Run `run_simple.bat` (will reinstall frontend)
 
 ## 🔄 Manual Commands (Alternative)
 
@@ -219,7 +249,7 @@ npm run dev
 You know it's working when:
 - ✅ Two terminal windows are open
 - ✅ Backend shows: "Running on http://127.0.0.1:5000"
-- ✅ Frontend shows: "Local: http://localhost:5173/"
+- ✅ Frontend shows: "Local: http://localhost:8080/"
 - ✅ Browser opens to the dashboard
 - ✅ You can select city and make predictions
 

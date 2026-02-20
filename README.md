@@ -33,7 +33,7 @@ airsense-predictor/
 
 **Easiest way - Just double-click:**
 ```
-run_me.bat
+run_simple.bat
 ```
 
 This automatically:

@@ -18,7 +18,7 @@ const WeatherStatsCards = () => {
 
   const stats = [
     {
-      title: 'Latest Temp',
+      title: 'Average Temperature',
       value: `${latestData.avgTemp}°C`,
       subtitle: latestCategory.name,
       icon: Thermometer,
