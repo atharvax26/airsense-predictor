@@ -122,9 +122,6 @@ python -m pip install pandas
 python -m pip install scikit-learn
 ```
 
-**See detailed fix guide:**
-Check `WINDOWS_INSTALL_FIX.md` for comprehensive solutions.
-
 ### "Failed to install frontend dependencies"
 
 **Solution:**
@@ -236,7 +233,7 @@ npm run dev
 ## 🆘 Still Having Issues?
 
 1. Check QUICKSTART.md for detailed setup
-2. Check TESTING_GUIDE.md for testing steps
+2. Run diagnose.bat to check your system
 3. Look at terminal windows for error messages
 4. Create a GitHub issue with:
    - Error message
